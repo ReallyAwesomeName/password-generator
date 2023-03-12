@@ -1,12 +1,9 @@
-/*
-FIXME:
-unchecking all boxes 
-*/
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 var configureBtn = document.querySelector("#configure");
+// TODO:medium - probably better way of changing button behavior?
 var showConfigHasRan = false;
-// options with defaults
+// options
 var options = {
   "Number of characters": 20,
   Lowercase: true,
@@ -14,6 +11,8 @@ var options = {
   Numeric: true,
   Special: true,
 };
+// TODO:low - works as var but not as a const?
+// default options
 var defaults = {
   "Number of characters": 20,
   Lowercase: true,
@@ -30,8 +29,8 @@ function writePassword() {
   passwordText.value = password;
 }
 
+// TODO:high - learn how to make this cryptographically secure
 function generatePassword() {
-  // TODO:high - learn how to make this cryptographically secure
   // generate a random password using specified options
   var chosenCharSet = "";
   var retVal = "";
@@ -58,7 +57,9 @@ function generatePassword() {
         continue;
     }
   }
+  
   // console.log(chosenCharSet);
+  // make password from character list
   for (let i = 0; i < window.options["Number of characters"]; i++) {
     // random index
     randInt = Math.floor(Math.random() * (chosenCharSet.length - 1));
@@ -118,39 +119,45 @@ function showConfig() {
       li.appendChild(checkbox);
       li.appendChild(generateLabel(key));
     }
+    // TODO:medium - probably better way of changing button behavior?
+    // prevent more inputs being created on repeated click
     window.showConfigHasRan = true;
   }
   return;
 }
 
 function getConfig() {
+  // get the custom config options for generatePassword()
+
   // no changes - return and use default
   if (!window.showConfigHasRan) return;
-
-  // get the custom config options for generatePassword()
+  
+  // iterate option choices and assign associated input values 
   for (const [key, option_value] of Object.entries(window.options)) {
     current_element = document.getElementById(key);
-    // TODO:low - can be made more versatile in case of other input types
+    // TODO:low - maybe a better way to do this?
     if (current_element.getAttribute("type") === "number") {
       // number of characters must be from 8 - 128
       if (current_element.value < 8 || current_element.value > 128) {
+        // set invalid value back to default and alert user
         current_element.value = defaults["Number of characters"];
         alert("Number of characters must be from 8 - 128");
         continue;
       } else {
+        // update option
         window.options[key] = current_element.value;
       }
     } else if (current_element.getAttribute("type") === "checkbox") {
       window.options[key] = current_element.checked;
     } else {
-      // something went wrong
+      // something went wrong - unsupported input of some kind?
       console.log("getConfig() - error retrieving configuration");
       window.options = defaults;
       alert("Something went wrong when gathering your configuration");
       return;
     }
   }
-  // FIXME:high - there must be a better way
+  // TODO:high - works but there must be a better way
   if (window.options.Lowercase === false && window.options.Uppercase === false && window.options.Numeric === false && window.options.Special === false) {
     window.options.Lowercase = true;
     window.options.Uppercase = true;
