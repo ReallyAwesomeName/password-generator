@@ -1,9 +1,20 @@
+/*
+FIXME:
+unchecking all boxes 
+*/
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 var configureBtn = document.querySelector("#configure");
 var showConfigHasRan = false;
 // options with defaults
 var options = {
+  "Number of characters": 20,
+  Lowercase: true,
+  Uppercase: true,
+  Numeric: true,
+  Special: true,
+};
+var defaults = {
   "Number of characters": 20,
   Lowercase: true,
   Uppercase: true,
@@ -18,17 +29,43 @@ function writePassword() {
 
   passwordText.value = password;
 }
-function generatePassword() {
-  var retval;
-  if (!window.showConfigHasRan) {
-    // default configuration
-    return;
-  } else {
-    // user defined configuration
-    var retval = getConfig(window.options);
-  }
 
-  return retval;
+function generatePassword() {
+  // TODO:high - learn how to make this cryptographically secure
+  // generate a random password using specified options
+  var chosenCharSet = "";
+  var retVal = "";
+
+  getConfig();
+
+  // build chosen set of characters
+  for (const [key, option_value] of Object.entries(window.options)) {
+    if (option_value === false) continue;
+    switch (key) {
+      case "Lowercase":
+        chosenCharSet += "abcdefghijklmnopqrstuvwxyz";
+        break;
+      case "Uppercase":
+        chosenCharSet += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        break;
+      case "Numeric":
+        chosenCharSet += "0123456789";
+        break;
+      case "Special":
+        chosenCharSet += "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~";
+        break;
+      default:
+        continue;
+    }
+  }
+  // console.log(chosenCharSet);
+  for (let i = 0; i < window.options["Number of characters"]; i++) {
+    // random index
+    randInt = Math.floor(Math.random() * (chosenCharSet.length - 1));
+    retVal += chosenCharSet[randInt];
+  }
+  // console.log(retVal);
+  return retVal;
 }
 
 function generateLabel(key) {
@@ -87,23 +124,40 @@ function showConfig() {
 }
 
 function getConfig() {
+  // no changes - return and use default
+  if (!window.showConfigHasRan) return;
+
   // get the custom config options for generatePassword()
   for (const [key, option_value] of Object.entries(window.options)) {
     current_element = document.getElementById(key);
-    // if element type is number get value
-    // else if element type is checkbox get checked
+    // TODO:low - can be made more versatile in case of other input types
     if (current_element.getAttribute("type") === "number") {
-      console.log("it a num");
-      window.options[key] = current_element.value;
+      // number of characters must be from 8 - 128
+      if (current_element.value < 8 || current_element.value > 128) {
+        current_element.value = defaults["Number of characters"];
+        alert("Number of characters must be from 8 - 128");
+        continue;
+      } else {
+        window.options[key] = current_element.value;
+      }
     } else if (current_element.getAttribute("type") === "checkbox") {
-      console.log("it a checkbox");
       window.options[key] = current_element.checked;
     } else {
-      console.log("error");
+      // something went wrong
+      console.log("getConfig() - error retrieving configuration");
+      window.options = defaults;
+      alert("Something went wrong when gathering your configuration");
+      return;
     }
   }
-  console.log(window.options);
-
+  // FIXME:high - there must be a better way
+  if (window.options.Lowercase === false && window.options.Uppercase === false && window.options.Numeric === false && window.options.Special === false) {
+    window.options.Lowercase = true;
+    window.options.Uppercase = true;
+    window.options.Numeric = true;
+    window.options.Special = true;
+    alert("Must select at least one character group");
+  }
   return;
 }
 
