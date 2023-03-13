@@ -1,7 +1,7 @@
 // Assignment Code
 var generateBtn = document.querySelector("#generate");
 var configureBtn = document.querySelector("#configure");
-// TODO:medium - probably better way of changing button behavior?
+// REVIEW: - probably better way of changing button behavior?
 var showConfigHasRan = false;
 // options
 var options = {
@@ -11,7 +11,7 @@ var options = {
   Numeric: true,
   Special: true,
 };
-// TODO:low - works as var but not as a const?
+// REVIEW: works as var but not as a const?
 // default options
 var defaults = {
   "Number of characters": 20,
@@ -57,7 +57,7 @@ function generatePassword() {
         continue;
     }
   }
-  
+
   // console.log(chosenCharSet);
   // make password from character list
   for (let i = 0; i < window.options["Number of characters"]; i++) {
@@ -119,7 +119,7 @@ function showConfig() {
       li.appendChild(checkbox);
       li.appendChild(generateLabel(key));
     }
-    // TODO:medium - probably better way of changing button behavior?
+    // REVIEW: probably better way of changing button behavior?
     // prevent more inputs being created on repeated click
     window.showConfigHasRan = true;
   }
@@ -131,11 +131,11 @@ function getConfig() {
 
   // no changes - return and use default
   if (!window.showConfigHasRan) return;
-  
-  // iterate option choices and assign associated input values 
+
+  // iterate option choices and assign associated input values
   for (const [key, option_value] of Object.entries(window.options)) {
     current_element = document.getElementById(key);
-    // TODO:low - maybe a better way to do this?
+    // REVIEW: maybe better way to do this?
     if (current_element.getAttribute("type") === "number") {
       // number of characters must be from 8 - 128
       if (current_element.value < 8 || current_element.value > 128) {
@@ -157,8 +157,13 @@ function getConfig() {
       return;
     }
   }
-  // TODO:high - works but there must be a better way
-  if (window.options.Lowercase === false && window.options.Uppercase === false && window.options.Numeric === false && window.options.Special === false) {
+  // REVIEW: works but there must be a better way
+  if (
+    window.options.Lowercase === false &&
+    window.options.Uppercase === false &&
+    window.options.Numeric === false &&
+    window.options.Special === false
+  ) {
     window.options.Lowercase = true;
     window.options.Uppercase = true;
     window.options.Numeric = true;
