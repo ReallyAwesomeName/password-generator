@@ -102,7 +102,11 @@ function showConfig() {
       input.setAttribute("id", key);
       input.setAttribute("min", "8");
       input.setAttribute("max", "128");
-      input.setAttribute("style", "max-width:3.5em");
+      input.setAttribute(
+        // TEMP: adjust here for light/dark mode
+        "style",
+        "max-width:3.5em; background-color:var(--background-color-primary); color:var(--color-primary); border:2px solid var(--highlight-primary)"
+      );
       input.value = option_value;
 
       ul.appendChild(li);
